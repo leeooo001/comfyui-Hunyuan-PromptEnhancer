@@ -1,0 +1,2 @@
+modelpath_fp16: X:/AIGC/Tencent-PromptEnhancer/main/tencent--HunyuanImage-2.1--reprompt
+modelpath_int8: X:/AIGC/Tencent-PromptEnhancer/main/tencent--HunyuanImage-2.1--reprompt-INT8
