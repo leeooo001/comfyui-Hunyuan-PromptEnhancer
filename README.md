@@ -2,7 +2,8 @@
 <p align="center">
   <img src="workflow.png" alt="workflow"/>
 </p>
-base on [Hunyuan PromptEnhancer](https://github.com/Hunyuan-PromptEnhancer/PromptEnhancer),基于此项目
+base on [Hunyuan PromptEnhancer](https://github.com/Hunyuan-PromptEnhancer/PromptEnhancer)
+基于此项目
 
 Hunyuan-PromptEnhancer is a prompt rewriting utility built on top of Tencent's Hunyuan models. It restructures an input prompt while preserving the original intent, producing clearer, layered, and logically consistent prompts suitable for downstream image generation or similar tasks.
 
