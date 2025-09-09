@@ -39,7 +39,7 @@ int8 model[My](https://huggingface.co/leeooo001/Hunyuan-PromptEnhancer-INT8).
 
 
 
-* 下载解压复制到comfyui的custom nodes下即可，一般情况无法安装额外依赖包，若有错误，可参考官方 [Hunyuan PromptEnhancer](https://github.com/Hunyuan-PromptEnhancer/PromptEnhancer/blob/main/requirements.txt) 的requirements.txt补充相关依赖。
+* 下载解压复制到comfyui的custom nodes下即可，一般情况无需安装额外依赖包，若有错误，可参考官方 [Hunyuan PromptEnhancer](https://github.com/Hunyuan-PromptEnhancer/PromptEnhancer/blob/main/requirements.txt) 的requirements.txt补充相关依赖。
 
 * 修改ckpts.yaml，配置本地模型地址.
 fp16版可从[官方](https://huggingface.co/tencent/HunyuanImage-2.1/tree/main/reprompt)下载到本地。
