@@ -1,4 +1,4 @@
-## Unoffice wrapper for Hunyuan PromptEnhancer  
+## Unofficial wrapper for Hunyuan PromptEnhancer  
 <p align="center">
   <img src="workflow.png" alt="workflow"/>
 </p>
