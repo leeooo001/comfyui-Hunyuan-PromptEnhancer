@@ -34,7 +34,7 @@ Hunyuan-PromptEnhancer 是一款基于腾讯混元模型构建的提示符重写
 #### install/安装
 * Download, unzip, and copy to thecustom nodes directory of comfyui. Generally, no needs to install additional dependency packages. If there are errors, please refer to the official documentation. [Hunyuan PromptEnhancer](https://github.com/Hunyuan-PromptEnhancer/PromptEnhancer/blob/main/requirements.txt)
 
-* Open and Modify ckpts.yaml to configure the local model path.
+* Download the model from the url below to any location on your disk, then Open and Modify ckpts.yaml to configure the local model path.
 fp16 model[official](https://huggingface.co/tencent/HunyuanImage-2.1/tree/main/reprompt).
 int8 model[My](https://huggingface.co/leeooo001/Hunyuan-PromptEnhancer-INT8).
 
@@ -42,6 +42,6 @@ int8 model[My](https://huggingface.co/leeooo001/Hunyuan-PromptEnhancer-INT8).
 
 * 下载解压复制到comfyui的custom nodes下即可，一般情况无需安装额外依赖包，若有错误，可参考官方 [Hunyuan PromptEnhancer](https://github.com/Hunyuan-PromptEnhancer/PromptEnhancer/blob/main/requirements.txt) 的requirements.txt补充相关依赖。
 
-* 修改ckpts.yaml，配置本地模型地址.
+* 从下面地址下载模型到本地任何地方，修改ckpts.yaml，配置本地模型地址.
 fp16版可从[官方](https://huggingface.co/tencent/HunyuanImage-2.1/tree/main/reprompt)下载到本地。
 int8版可从[我的仓库](https://huggingface.co/leeooo001/Hunyuan-PromptEnhancer-INT8)下载到本地。
