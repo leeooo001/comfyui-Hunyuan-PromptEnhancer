@@ -42,24 +42,11 @@ class HunyuanPromptEnhancer:
     def predict(
         self,
         prompt_cot,
-        sys_prompt="你是一位图像生成提示词撰写专家，请根据用户输入的提示词，改写生成新的提示词，改写后的提示词要求：1 改写后提示词包含的主体/动作/数量/风格/布局/关系/属性/文字等 必须和改写前的意图一致； 2 在宏观上遵循“总-分-总”的结构，确保信息的层次清晰；3 客观中立，避免主观臆断和情感评价；4 由主到次，始终先描述最重要的元素，再描述次要和背景元素；5 逻辑清晰，严格遵循空间逻辑或主次逻辑，使读者能在大脑中重建画面；6 结尾点题，必须用一句话总结图像的整体风格或类型。",
+        sys_prompt,
         temperature=0,
         top_p=1.0,
         max_new_tokens=512,
     ):
-        """
-        Generate a rewritten prompt using the model.
-
-        Args:
-            prompt_cot (str): The original prompt to be rewritten.
-            sys_prompt (str): System prompt to guide the rewriting.
-            temperature (float): Sampling temperature.
-            top_p (float): Top-p sampling parameter.
-            max_new_tokens (int): Maximum number of new tokens to generate.
-
-        Returns:
-            str: The rewritten prompt, or the original if generation fails.
-        """
         org_prompt_cot = prompt_cot
         try:
             messages = [
@@ -83,7 +70,6 @@ class HunyuanPromptEnhancer:
                 top_p=float(top_p) if do_sample else None,
             )
 
-            # Decode only new tokens and skip special tokens
             generated_sequence = outputs[0]
             prompt_length = inputs.shape[-1]
             new_tokens = generated_sequence[prompt_length:]
@@ -105,6 +91,7 @@ class HunyuanPromptEnhancer:
 
         return prompt_cot
 
+
 class XX_Hunyuan_PromptEnhancer:
     def __init__(self):
         pass
@@ -113,9 +100,12 @@ class XX_Hunyuan_PromptEnhancer:
     def INPUT_TYPES(s):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "placeholder": "Prompt Text"}),
+                "models": (["int8","fp16"],),  
+                "temperature": ("FLOAT", {"default": 0.7, "step": 0.01, "min": 0, "max": 100.00}),
+                "top_p": ("FLOAT", {"default": 0.9, "step": 0.01, "min": 0, "max": 100.00}),
+                "max_new_tokens": ("INT", {"default": 256, "step": 1, "min": 0, "max": 99999}),
                 "prompt": ("STRING", {"multiline": True, "placeholder": "Prompt Text", "default": prompt_deault}),
-                "options": (["int8","fp16"],),
+                "text": ("STRING", {"multiline": True, "placeholder": "Prompt Text"}),
             },
         }
     
@@ -125,11 +115,13 @@ class XX_Hunyuan_PromptEnhancer:
 
     CATEGORY="XX"
 
-    def run(self, text, prompt, options):
-        if options == 'fp16':
+    def run(self, models, temperature, top_p, max_new_tokens, prompt, text):
+        if models == 'fp16':
             CKPTS_PATH = CKPTS_FILE['modelpath_fp16']
-        else:
+        elif models == 'int8':
             CKPTS_PATH = CKPTS_FILE['modelpath_int8']
+        else:
+            return None
 
         enhancer = HunyuanPromptEnhancer(models_root_path=CKPTS_PATH, device_map="auto")
 
