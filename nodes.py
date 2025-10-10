@@ -9,7 +9,8 @@ CKPTS_FILE = omegaconf.OmegaConf.load(os.path.join(script_directory, 'ckpts.yaml
 
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from torch import cuda, bfloat16
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 prompt_deault = "你是一位图像生成提示词撰写专家，请根据用户输入的提示词，改写生成新的提示词，改写后的提示词要求：1 改写后提示词包含的主体/动作/数量/风格/布局/关系/属性/文字等 必须和改写前的意图一致； 2 在宏观上遵循“总-分-总”的结构，确保信息的层次清晰；3 客观中立，避免主观臆断和情感评价；4 由主到次，始终先描述最重要的元素，再描述次要和背景元素；5 逻辑清晰，严格遵循空间逻辑或主次逻辑，使读者能在大脑中重建画面；6 结尾点题，必须用一句话总结图像的整体风格或类型。",
 
@@ -32,10 +33,10 @@ class HunyuanPromptEnhancer:
         self.logger = logging.getLogger(__name__)
         
         self.model = AutoModelForCausalLM.from_pretrained(
-            models_root_path, device_map=device_map, trust_remote_code=True
+            models_root_path, device_map=device_map, dtype=torch.bfloat16, trust_remote_code=True
         )
         self.tokenizer = AutoTokenizer.from_pretrained(
-            models_root_path, trust_remote_code=True
+            models_root_path, dtype=torch.bfloat16, trust_remote_code=True
         )
 
     @torch.inference_mode()
@@ -104,6 +105,7 @@ class XX_Hunyuan_PromptEnhancer:
                 "temperature": ("FLOAT", {"default": 0.7, "step": 0.01, "min": 0, "max": 100.00}),
                 "top_p": ("FLOAT", {"default": 0.9, "step": 0.01, "min": 0, "max": 100.00}),
                 "max_new_tokens": ("INT", {"default": 256, "step": 1, "min": 0, "max": 99999}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
                 "prompt": ("STRING", {"multiline": True, "placeholder": "Prompt Text", "default": prompt_deault}),
                 "text": ("STRING", {"multiline": True, "placeholder": "Prompt Text"}),
             },
@@ -115,7 +117,7 @@ class XX_Hunyuan_PromptEnhancer:
 
     CATEGORY="XX"
 
-    def run(self, models, temperature, top_p, max_new_tokens, prompt, text):
+    def run(self, models, temperature, top_p, max_new_tokens, seed, prompt, text):
         if models == 'fp16':
             CKPTS_PATH = CKPTS_FILE['modelpath_fp16']
         elif models == 'int8':
@@ -123,7 +125,11 @@ class XX_Hunyuan_PromptEnhancer:
         else:
             return None
 
-        enhancer = HunyuanPromptEnhancer(models_root_path=CKPTS_PATH, device_map="auto")
+        seed_g = torch.Generator(device=torch.device("cpu"))
+        seed_g.manual_seed(seed)
+        
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        enhancer = HunyuanPromptEnhancer(models_root_path=CKPTS_PATH, device_map=device)
 
         new_prompt = enhancer.predict(
             prompt_cot=text,
